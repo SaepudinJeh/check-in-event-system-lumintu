@@ -36,10 +36,12 @@ const scanPage = {
   async afterRender() {
     const { id } = UrlParser.parseActiveUrlWithoutCombiner();
 
+    const idSeminar = id
 
-    async function onScanSuccess(decodedText, decodedResult) {
+
+    async function onScanSuccess(idParticipant, decodedResult) {
       // handle the scanned code as you like, for example:
-      window.location.replace(`/#/participant/${decodedText}-${id}`);
+      window.location.replace(`/#/participant/${idParticipant}-${idSeminar}`);
     }
 
     async function onScanFailure(error) {
@@ -63,7 +65,7 @@ const scanPage = {
       if (getValue === '') {
         return;
       } else {
-        window.location.replace(`/#/participant/${getValue}`);
+        window.location.replace(`/#/participant/${getValue}-${idSeminar}`);
       }
 
       document.querySelector('#id-code').value = '';
