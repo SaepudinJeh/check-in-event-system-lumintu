@@ -1,5 +1,6 @@
 import UrlParser from '../../routes/urlParser';
 import GetData from '../../utils/getDataApi';
+import GetDataRegistration from '../../utils/getDataRegistration';
 import { participantName, participantId, description, registration, merchandise, buttonElement, checkStatusElement } from '../templates/participantDetail/participantTemplates';
 
 
@@ -28,7 +29,7 @@ const participantDetail = {
 
             <!--NOTIFY CHECKED-->
             <div id="check-status" class="rounded-lg">
-                
+
             </div>
           </div>
 
@@ -51,7 +52,7 @@ const participantDetail = {
                 <div>
                   <!--CHECK-IN-->
                   <div id="registration">
-                      
+
                   </div>
 
                   <div id="session-history">
@@ -95,17 +96,17 @@ const participantDetail = {
     const idParticipant = id.split('-')[0];
     const idSession = id.split('-')[1];
 
+    console.table([idParticipant, idSession])
+
     const historySession = (data) => `
       <p class="font-bold text-xs py-2">${ data.id_session }</p>
     `;
 
     Promise.all([
-      GetData(`https://api-ticket.arisukarno.xyz/items/order?fields=customer_id.customer_id,customer_id.customer_name,ticket_id.ticket_id,ticket_id.ticket_type&filter[customer_id]=${idParticipant}`),
-      // GetData(`https://api-ticket.arisukarno.xyz/items/registration?filter[id_participant]=${idParticipant}&aggregate[min]=validated_on`),
-      // GetData(`https://api-ticket.arisukarno.xyz/items/customer_x_merch_eligible?fields=*,%20merch_eligible_id.merch_id.merch_name&filter[customer_x_merch_id][customer_id]=${idParticipant}`),
-      // GetData(`https://api-ticket.arisukarno.xyz/items/registration?filter[id_participant]=${idParticipant}&aggregate[min]=validated_on`),
-      // GetData(`https://api-ticket.arisukarno.xyz/items/registration?filter[id_participant]=${idParticipant}&filter[validated_on][_between]=[2020-01-1,2200-12-12]`),
-    ]).then(async([res1]) => {
+      GetData(`http://lumintu-tiket.tamiaindah.xyz:8055/items/order?fields=customer_id.customer_id,customer_id.customer_name,ticket_id.ticket_id,ticket_id.ticket_type&filter[customer_id]=${idParticipant}`),
+
+      GetDataRegistration(`http://localhost:5000/v1/participant/${idParticipant}/seminar/${idSession}`)
+    ]).then(async([res1, res2]) => {
       res1.map((data) => {
 
         elementName.innerHTML = participantName(data);
@@ -113,44 +114,13 @@ const participantDetail = {
         elementDesc.innerHTML = description(data);
       })
 
-      // res2.map((data) => {
-      //   validatedOn.innerHTML += registration(data);
-      // });
+      const merchs = res2.merch.merch
 
-      // res3.map((data) => {
-      //   merchElement.innerHTML += merchandise(data)
-      // });
+      merchs.map(data => {
+        merchElement.innerHTML += merchandise(data)
+      })
 
-      // res4.map(data => {
-
-      //   const time = data.min.validated_on;
-
-      //   let status = '';
-
-      //   const time_validated = moment(time).format('L');
-      //   const current_time = moment(new Date).format('L');
-       
-      //   if (time_validated == null) {
-      //     status = 'Non Active';
-      //     checkStatus.innerHTML = checkStatusElement(status)
-      //     checkStatus.classList.add('bg-red-600');
-      //   }
-
-      //   if (time_validated > current_time) {
-      //     status = 'Check In';
-      //     checkStatus.innerHTML = checkStatusElement(status)
-      //     checkStatus.classList.add('bg-green-500');
-      //   }
-
-       
-
-      // });
-
-      // res5.map((data) => {
-      //   sessionHistoryElement.innerHTML += historySession(data);
-      // })
-
-      // buttonSubmit.innerHTML = buttonElement;
+      buttonSubmit.innerHTML = buttonElement;
 
       spinnerElement.classList.add('hidden')
     }).catch((err) => {
@@ -162,27 +132,16 @@ const participantDetail = {
       e.preventDefault();
       e.stopPropagation();
 
-      GetData(`http://192.168.18.76:8002/items/registration?filter[id_participant]=${idParticipant}&filter[id_session]=${idSession}`).then( async (result) => {
-        const id_session = result[0].id_registration;
-        
-        const payload = {
-          "validated_on": new Date()
-        }
-
-
-        const response =  await fetch(`http://192.168.18.76:8002/items/registration/${id_session}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        })
-
-        console.log(response);
-
-         window.location.replace('/#/scan/4');
-
+      const response =  await fetch(`http://localhost:5000/v1/participant/${idParticipant}/seminar/${idSession}`, {
+        method: 'PATCH'
       })
+
+      const response2 = await
+
+      console.log(response)
+
+      window.location.replace('/#/active-session')
+
     })
   }
 };
