@@ -1,0 +1,112 @@
+#preview__scan_region img {
+    margin: auto;
+}
+
+
+#preview__dashboard_section_swaplink{
+    visibility: hidden;
+}
+
+.spinner {
+  top: 50vh;
+  left: 50%;
+  position: fixed;
+  transform: translateX(-50%);
+}
+
+.spinner-2 {
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  border:8px solid;
+  border-color:lightblue;
+  border-right-color: orange;
+  animation:s2 1s infinite linear;
+}
+@keyframes s2 {to{transform: rotate(1turn)}}
+
+.progress-7 {
+  width: 120px;
+  height: 20px;
+  -webkit-mask: radial-gradient(circle closest-side,#000 94%,#0000) left/20% 100%;
+  background: linear-gradient(#F59E0B 0 0) left/0% 100% no-repeat #ddd;
+  animation: p7 2s infinite steps(6);
+}
+@keyframes p7 {
+  100% {background-size:120% 100%}
+}
+
+
+#table-id{
+  border-radius: 6px;
+  background-color: #fff;
+}
+.dataTables_length select{
+  float: left;
+  margin-right: 5%;
+  border-radius: 6px;
+  border: solid 5px #fff;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  width: 45% !important;
+  padding: 3px 3px;
+}
+.dataTables_wrapper .dataTables_paginate {
+ float:none; 
+ text-align:center;
+ }
+
+.dataTables_length select,input{
+margin-bottom: 15px;
+}
+
+/* #table-id_length {
+  width: 300px;
+
+  } */
+
+/* #table-id_filter input{
+  width: 300px;
+  } */
+  
+
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+color: #3B82F6 !important;
+border: 1px solid white;
+border-radius: 100%;
+background-color: white;
+}
+
+.dataTables_paginate .paginate_button  {
+box-sizing: border-box;
+display: inline-block;
+min-width: 1.5em;
+padding: 0.5em 1em;
+text-align: center;
+text-decoration: none !important;
+cursor: pointer;
+*cursor: hand;
+color: #3B82F6 !important;
+
+}
+.dataTables_filter > label > input{
+  border-radius: 6px;
+  border: solid 5px #fff;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  padding: 3px 3px;
+  float: right;
+  width: 50%;
+}
+table.sortable thead tr th {
+  background-repeat: no-repeat;
+  background-position: right center ;
+  cursor: pointer;
+}
+.dataTables_info {
+  float: none;
+  margin-left: 2%;
+  font-size: 14px;
+  text-align: center;
+  padding-top: 12px;
+  font-weight: bold;
+}
