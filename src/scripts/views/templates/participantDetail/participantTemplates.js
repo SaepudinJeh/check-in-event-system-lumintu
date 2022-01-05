@@ -1,7 +1,17 @@
 const participantName = (data) => `
-  <div class="">
-    <p class="text-gray-400 pt-4 font-medium text-xs">PARTICIPANT NAME</p>
-    <p class="font-bold text-lg truncate">${data.customer_id.customer_name}</p>
+  <p class="text-gray-400 pt-4 font-medium text-xs">PARTICIPANT NAME</p>
+  <p class="font-bold text-lg truncate">${data.customer_id.customer_name}</p>
+`;
+
+const statusActive = `
+  <div class="py-1 px-3 bg-green-500 rounded-xl text-white text-sm font-medium">
+    Active
+  </div>
+`;
+
+const statusInactive = `
+  <div class="py-1 px-3 bg-gray-400 rounded-xl text-white text-sm font-medium">
+    Inactive
   </div>
 `;
 
@@ -48,5 +58,7 @@ export {
   registration,
   merchandise,
   buttonElement,
-  checkStatusElement
+  checkStatusElement,
+  statusActive,
+  statusInactive
 };

@@ -1,7 +1,7 @@
 import UrlParser from '../../routes/urlParser';
 import GetData from '../../utils/getDataApi';
 import GetDataRegistration from '../../utils/getDataRegistration';
-import { participantName, participantId, description, registration, merchandise, buttonElement, checkStatusElement } from '../templates/participantDetail/participantTemplates';
+import { participantName, participantId, description, registration, merchandise, buttonElement, checkStatusElement, statusActive, statusInactive } from '../templates/participantDetail/participantTemplates';
 
 
 const participantDetail = {
@@ -14,9 +14,9 @@ const participantDetail = {
 
       <!-- Navigation -->
         <div class="flex items-center justify-between">
-          <button onClick="window.history.back();" class="pl-5">
+          <a href="/#/active-session" class="pl-5">
               <span class="iconify text-4xl" data-icon="bi:arrow-left-short"></span>
-          </button>
+          </a>
           <h1 class="mx-auto font-semibold">Participant Detail</h1>
           <div></div>
         </div>
@@ -24,11 +24,16 @@ const participantDetail = {
 
         <div class="box-border w-full bg-white mx-auto rounded-lg mt-10 mb-10 pb-5 md:px-7 px-4">
           <div class="flex items-center justify-between border-b-2 border-dashed">
-            <div id="custumer">
+            <div class="w-full">
+              <div class="flex items-center justify-between w-full">
+                <div id="custumer">
+
+                </div>
+              </div>
             </div>
 
             <!--NOTIFY CHECKED-->
-            <div id="check-status" class="rounded-lg">
+            <div id="status">
 
             </div>
           </div>
@@ -56,7 +61,9 @@ const participantDetail = {
                   </div>
 
                   <div id="session-history">
-                    <p class="text-gray-400 pt-4 font-medium text-xs">History Session</p>
+                    <p class="text-gray-400 pt-4 font-medium text-xs">REGISTRATION TIME</p>
+
+                    <p class="regis-time text-xs mt-1 font-medium"></p>
                   </div>
                 </div>
             </div>
@@ -92,6 +99,8 @@ const participantDetail = {
     const checkStatus = document.querySelector('#check-status');
     const spinnerElement = document.querySelector('.spinner');
     const sessionHistoryElement = document.querySelector('#session-history');
+    const statusCheckIn = document.querySelector('#status');
+    const regisTime = document.querySelector('.regis-time');
 
     const idParticipant = id.split('-')[0];
     const idSession = id.split('-')[1];
@@ -114,11 +123,31 @@ const participantDetail = {
         elementDesc.innerHTML = description(data);
       })
 
+      const validateCheckIn = res2.participant.validate_on
+
+      // Check Status --------->
+      if (validateCheckIn !== '' || null) {
+        statusCheckIn.innerHTML += statusActive
+        console.log(statusCheckIn)
+        console.log('wkwkwk')
+      } else {
+        statusCheckIn.innerHTML += statusInactive
+      }
+
+      // Check Status <-------
+
+      // Registration time
+
+      regisTime.innerHTML = `${moment(res2.participant.create_at, 'Asia/Jakarta').format('LLLL')}`
+
+      // Merch ------->
       const merchs = res2.merch.merch
 
       merchs.map(data => {
         merchElement.innerHTML += merchandise(data)
       })
+
+      //  Merch <-------
 
       buttonSubmit.innerHTML = buttonElement;
 
@@ -136,9 +165,9 @@ const participantDetail = {
         method: 'PATCH'
       })
 
-      const response2 = await
+      const response2 = await fetch(`http://localhost:5000/v1/${idParticipant}`)
 
-      console.log(response)
+      console.table([response, response2])
 
       window.location.replace('/#/active-session')
 
