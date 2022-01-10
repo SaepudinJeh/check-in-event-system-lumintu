@@ -60,8 +60,20 @@ const participantDetail = {
 
                   </div>
 
-                  <div id="session-history">
+                  <div>
                     <p class="text-gray-400 pt-4 font-medium text-xs">REGISTRATION TIME</p>
+
+                    <p class="regis-time text-xs mt-1 font-medium"></p>
+                  </div>
+
+                  <div>
+                    <p class="text-gray-400 pt-4 font-medium text-xs">CHECK-IN TIME</p>
+
+                    <p class="regis-time text-xs mt-1 font-medium"></p>
+                  </div>
+
+                  <div>
+                    <p class="text-gray-400 pt-4 font-medium text-xs">HISTORY</p>
 
                     <p class="regis-time text-xs mt-1 font-medium"></p>
                   </div>
@@ -73,7 +85,7 @@ const participantDetail = {
           <form>
               <p class="text-gray-400 py-4 font-medium text-xs">MERCHANDISE</p>
 
-              <div id="merch" class="form-check text-xs flex flex-col">
+              <div id="merch">
 
               </div>
 
@@ -98,7 +110,6 @@ const participantDetail = {
     const buttonSubmit = document.querySelector('#button-submit');
     const checkStatus = document.querySelector('#check-status');
     const spinnerElement = document.querySelector('.spinner');
-    const sessionHistoryElement = document.querySelector('#session-history');
     const statusCheckIn = document.querySelector('#status');
     const regisTime = document.querySelector('.regis-time');
 
@@ -122,7 +133,7 @@ const participantDetail = {
       })
 
       // Check Status --------->
-      const { validate_on, ticket_type } = res2.participant
+      const { validate_on, ticket_type, create_at } = res2.participant
       if (validate_on !== '' || null) {
         statusCheckIn.innerHTML += statusActive
       } else {
@@ -134,7 +145,7 @@ const participantDetail = {
 
       // Registration time
 
-      regisTime.innerHTML = `${moment(res2.participant.create_at, 'Asia/Jakarta').format('LLLL')}`
+      regisTime.innerHTML = `${moment(create_at).locale('id').format('LL')}`
 
       // Merch ------->
 
@@ -148,6 +159,7 @@ const participantDetail = {
 
       listMerchApi.map(data => {
         document.getElementById(data).checked = true;
+        document.getElementById(data).disabled = true;
       })
 
       buttonSubmit.innerHTML = buttonElement;

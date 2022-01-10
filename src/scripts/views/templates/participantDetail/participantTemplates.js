@@ -31,10 +31,12 @@ const registration = (data) => `
 `;
 
 const merchandise = (data) => `
-  <input id="${data}" type="checkbox" value="${data}" name="${data}" id=${data}>
-  <label class="form-check-label pl-2 font-medium" for="${data}">
-      ${data}
-  </label>
+  <div class="form-check text-xs block">
+    <input id="${data}" type="checkbox" value="${data}" name="${data}" id=${data}>
+    <label class="form-check-label pl-2 font-medium" for="${data}">
+        ${data}
+    </label>
+  </div>
 `;
 
 const buttonElement = `
