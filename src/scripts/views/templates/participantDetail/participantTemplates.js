@@ -20,9 +20,9 @@ const participantId = (data) => `
   <p class="font-bold text-md py-2">${data.customer_id.customer_id}</p>
 `;
 
-const description =(data) =>`
+const ticketType =(data) =>`
    <p class="text-gray-400 pt-4 font-medium text-xs">TICKET TYPE</p>
-   <p class="font-bold text-xs py-2">${data.ticket_id.ticket_type}</p>
+   <p class="font-bold text-xs py-2">${data}</p>
 `;
 
 const registration = (data) => `
@@ -31,12 +31,10 @@ const registration = (data) => `
 `;
 
 const merchandise = (data) => `
-  <div class="form-check text-xs block">
-    <input type="checkbox" value="${data}" name="${data}" id=${data} checked="checked" disabled>
-      <label class="form-check-label pl-2 font-medium" for="${data}">
-          ${data}
-      </label>
-  </div>
+  <input id="${data}" type="checkbox" value="${data}" name="${data}" id=${data}>
+  <label class="form-check-label pl-2 font-medium" for="${data}">
+      ${data}
+  </label>
 `;
 
 const buttonElement = `
@@ -54,7 +52,7 @@ const checkStatusElement = (data) => `
 export {
   participantName,
   participantId,
-  description,
+  ticketType,
   registration,
   merchandise,
   buttonElement,

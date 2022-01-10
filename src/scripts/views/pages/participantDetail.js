@@ -1,7 +1,7 @@
 import UrlParser from '../../routes/urlParser';
 import GetData from '../../utils/getDataApi';
 import GetDataRegistration from '../../utils/getDataRegistration';
-import { participantName, participantId, description, registration, merchandise, buttonElement, checkStatusElement, statusActive, statusInactive } from '../templates/participantDetail/participantTemplates';
+import { participantName, participantId, ticketType, registration, merchandise, buttonElement, checkStatusElement, statusActive, statusInactive } from '../templates/participantDetail/participantTemplates';
 
 
 const participantDetail = {
@@ -73,7 +73,7 @@ const participantDetail = {
           <form>
               <p class="text-gray-400 py-4 font-medium text-xs">MERCHANDISE</p>
 
-              <div id="merch">
+              <div id="merch" class="form-check text-xs flex flex-col">
 
               </div>
 
@@ -92,7 +92,7 @@ const participantDetail = {
     const { id } = UrlParser.parseActiveUrlWithoutCombiner();
     const elementName = document.querySelector('#custumer');
     const elementId = document.querySelector('#participant');
-    const elementDesc = document.querySelector('#ticket');
+    const elementTicketType = document.querySelector('#ticket');
     const validatedOn = document.querySelector('#registration');
     const merchElement = document.querySelector('#merch');
     const buttonSubmit = document.querySelector('#button-submit');
@@ -105,49 +105,50 @@ const participantDetail = {
     const idParticipant = id.split('-')[0];
     const idSession = id.split('-')[1];
 
-    console.table([idParticipant, idSession])
-
     const historySession = (data) => `
       <p class="font-bold text-xs py-2">${ data.id_session }</p>
     `;
 
     Promise.all([
       GetData(`http://lumintu-tiket.tamiaindah.xyz:8055/items/order?fields=customer_id.customer_id,customer_id.customer_name,ticket_id.ticket_id,ticket_id.ticket_type&filter[customer_id]=${idParticipant}`),
-
-      GetDataRegistration(`http://localhost:5000/v1/participant/${idParticipant}/seminar/${idSession}`)
-    ]).then(async([res1, res2]) => {
+      GetDataRegistration(`http://localhost:5000/v1/participant/${idParticipant}/seminar/${idSession}`),
+      GetDataRegistration(`http://localhost:5000/v1/merch/${idParticipant}`)
+    ]).then(async([res1, res2, res3]) => {
       res1.map((data) => {
 
         elementName.innerHTML = participantName(data);
         elementId.innerHTML = participantId(data);
-        elementDesc.innerHTML = description(data);
+
       })
 
-      const validateCheckIn = res2.participant.validate_on
-
       // Check Status --------->
-      if (validateCheckIn !== '' || null) {
+      const { validate_on, ticket_type } = res2.participant
+      if (validate_on !== '' || null) {
         statusCheckIn.innerHTML += statusActive
-        console.log(statusCheckIn)
-        console.log('wkwkwk')
       } else {
         statusCheckIn.innerHTML += statusInactive
       }
 
-      // Check Status <-------
+      // ticketType
+      elementTicketType.innerHTML = ticketType(ticket_type);
 
       // Registration time
 
       regisTime.innerHTML = `${moment(res2.participant.create_at, 'Asia/Jakarta').format('LLLL')}`
 
       // Merch ------->
-      const merchs = res2.merch.merch
 
-      merchs.map(data => {
+      const merch = res2.merch
+      merch.map(data => {
+        // Merch list logic
         merchElement.innerHTML += merchandise(data)
       })
 
-      //  Merch <-------
+      const listMerchApi = res3.merchandise
+
+      listMerchApi.map(data => {
+        document.getElementById(data).checked = true;
+      })
 
       buttonSubmit.innerHTML = buttonElement;
 
@@ -156,20 +157,39 @@ const participantDetail = {
       console.log(err)
     });
 
-
+    // Submit Check in & update merchandise
     buttonSubmit.addEventListener('click', async (e) => {
       e.preventDefault();
       e.stopPropagation();
 
-      const response =  await fetch(`http://localhost:5000/v1/participant/${idParticipant}/seminar/${idSession}`, {
+      // Form list merch checkbox
+      const itemForm = document.getElementById('merch');
+      const checkBoxes = itemForm.querySelectorAll('input[type="checkbox"]');
+
+      const merchandise = new Array()
+
+      checkBoxes.forEach(data => {
+        if (data.checked) {
+          merchandise.push(data.value)
+        }
+      })
+
+
+      const checkIn =  await fetch(`http://localhost:5000/v1/participant/${idParticipant}/seminar/${idSession}`, {
         method: 'PATCH'
       })
 
-      const response2 = await fetch(`http://localhost:5000/v1/${idParticipant}`)
+      const updateMerch =  await fetch(`http://localhost:5000/v1/merch/${idParticipant}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(merchandise)
+      })
 
-      console.table([response, response2])
+      console.table([checkIn, updateMerch])
 
-      window.location.replace('/#/active-session')
+      // window.location.replace('/#/active-session')
 
     })
   }
