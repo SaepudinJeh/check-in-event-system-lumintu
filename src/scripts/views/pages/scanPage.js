@@ -1,4 +1,7 @@
 import UrlParser from '../../routes/urlParser';
+import { sources, swal } from '../dist/sweetalert2.all';
+import Swal from '../dist/sweetalert2.all'
+import getData from '../../utils/getDataApi';
 
 const scanPage = {
   async render() {
@@ -6,11 +9,11 @@ const scanPage = {
       <section class="mx-auto w-full">
         <div class="flex items-center">
           <button>
-            <a href="/#/">
-              <span class="iconify text-4xl" data-icon="bi:arrow-left-short"></span>
+            <a href="/#/" class="pl-5">
+              <span class="iconify text-5xl" data-icon="bi:arrow-left-short"></span>
             </a>
           </button>
-          <h1 class="text-xl font-semibold mx-auto" style="font-family: 'Montserrat', sans-serif;">QR Scan</h1>
+          <h1 class="text-2xl font-semibold mx-auto" style="font-family: 'Montserrat', sans-serif;">QR Scan</h1>
         </div>
 
         <!-- qr scan -->
@@ -20,7 +23,7 @@ const scanPage = {
 
          <div class="mt-8">
             <form class="bg-white flex items-center rounded-xl shadow-xl mx-auto">
-                <input id="id-code" class="rounded-xl w-full py-1 px-6 text-gray-700 leading-tight focus:outline-none" id="cam-qr-result" type="text" placeholder="Search Your Participant ID">
+                <input id="id-code" class="rounded-xl w-full py-1 px-6 text-gray-700 focus:outline-none" id="cam-qr-result" type="text" placeholder="Search Your Participant ID">
               <div class="p-4">
                 <button id="buttonForm" type="submit" class="text-white rounded-full p-2 hover:bg-blue-400 focus:outline-none w-12 h-12 flex items-center justify-center">
                   <span class="iconify text-2xl text-gray-700" data-icon="bx:bx-search-alt"></span>
@@ -39,15 +42,30 @@ const scanPage = {
     const idSeminar = id
 
 
-    async function onScanSuccess(idParticipant, decodedResult) {
+    async function onScanSuccess(idParticipant,decodedText, decodedResult) {
       // handle the scanned code as you like, for example:
-      window.location.replace(`/#/participant/${idParticipant}-${idSeminar}`);
+      // window.location.replace(`/#/participant/${idParticipant}-${idSeminar}`);
+      fetch(`https://register.ulin-app.xyz/v1/participant/15/seminar/4`, {
+        method: 'PATCH'
+      }).then(result => {
+        Swal.fire({
+          position: 'center',
+          icon:'success',
+          title: 'Check-In Success',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          location.replace(`/#/participant/${decodedText}-${id}`)
+          location.reload()
+          return
+        })
+      })
     }
 
     async function onScanFailure(error) {
       // handle scan failure, usually better to ignore and keep scanning.
       // for example:
-      // console.warn(`Code scan error = ${error}`);
+       console.warn(`Code scan error = ${error}`);
     }
 
     const html5QrcodeScanner = new Html5QrcodeScanner(
@@ -70,6 +88,10 @@ const scanPage = {
 
       document.querySelector('#id-code').value = '';
     })
+
+    if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices.getUserMedia({video: true})) {
+      console.log("Let's get this party started")
+    }
 
   }
 };

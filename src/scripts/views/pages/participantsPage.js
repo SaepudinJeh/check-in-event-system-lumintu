@@ -1,14 +1,14 @@
 const participantPage = {
   async render() {
     return `
-        <section class="mx-auto pb-40">
+        <section class="mx-auto">
           <div class="flex items-center justify-between pt-2">
             <button>
-              <a href="/#/">
-                <span class="iconify text-4xl" data-icon="bi:arrow-left-short"></span>
+              <a href="/#/" class="pl-5">
+                <span class="iconify text-5xl" data-icon="bi:arrow-left-short"></span>
               </a>
             </button>
-            <h1 class="text-center font-bold text-base">List Participants</h1>
+            <h1 class="text-center font-bold text-4xl">List Participants</h1>
             <div></div>
           </div>
 
@@ -37,7 +37,7 @@ const participantPage = {
   
   $(document).ready(function() {
     const table = $('#table-id').DataTable( {
-        "ajax": "http://192.168.18.76:8001/items/order?fields=customer_id.customer_id,customer_id.customer_email,customer_id.customer_name,ticket_id.ticket_id,ticket_id.ticket_type,ticket_id.ticket_x_session.session_id.,ticket_id.ticket_x_day.day_id.,invoice_id.invoice_status,invoice_id.customer_id.customer_email&filter[invoice_id][invoice_status]=1",
+        "ajax": "http://lumintu-tiket.tamiaindah.xyz:8055/items/order?fields=customer_id.customer_id,customer_id.customer_email,customer_id.customer_name,ticket_id.ticket_id,ticket_id.ticket_type,ticket_id.ticket_x_session.session_id.,ticket_id.ticket_x_day.day_id.,invoice_id.invoice_status,invoice_id.customer_id.customer_email&filter[invoice_id][status]=settlement",
         "bInfo" : true,
         "columns": [
           { data: "customer_id.customer_name"},
@@ -49,15 +49,15 @@ const participantPage = {
           sLengthMenu:"_MENU_",
           search: '', searchPlaceholder: "Participant ID/Link" ,
           oPaginate: {
-              sNext: ' <button class="px-4 py-2 my-2 text-white bg-blue-500 rounded-full hover:bg-gray-700 hover:text-black" > > <button class="sr-only ">(current)</button>',
-              sPrevious: ' <button class="px-4 py-2 my-2 text-white bg-blue-500 rounded-full hover:bg-gray-700 hover:text-black" > < <button class="sr-only ">(current)</button>',
+              sNext: ' <button class="px-4 py-2 my-2 text-white bg-yellow-400 rounded-full hover:bg-gray-700 hover:text-black" > > <button class="sr-only ">(current)</button>',
+              sPrevious: ' <button class="px-4 py-2 my-2 text-white bg-yellow-400 rounded-full hover:bg-gray-700 hover:text-black" > < <button class="sr-only ">(current)</button>',
         }
       },
       "columnDefs": [{
       "targets": -1,
       "data": null,
       "render": function(data, type, row, meta) {
-          return `<a href="/#/participant/${data.customer_id.customer_id}"><button class='bg-blue-500 hover:bg-gray-700 text-white font-bold px-3 py-1 md:py-2 md:px-4 rounded-full my-2'>Detail</button></a>`
+          return `<a href="/#/participant/${data.customer_id.customer_id}"><button class='bg-yellow-400 hover:bg-gray-700 text-white font-bold px-3 py-1 md:py-2 md:px-4 rounded-full my-2'>Detail</button></a>`
       }
       }]
     });

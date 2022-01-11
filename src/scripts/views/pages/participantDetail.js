@@ -1,7 +1,8 @@
 import UrlParser from '../../routes/urlParser';
 import GetData from '../../utils/getDataApi';
 import GetDataRegistration from '../../utils/getDataRegistration';
-import { participantName, participantId, ticketType, registration, merchandise, buttonElement, checkStatusElement, statusActive, statusInactive } from '../templates/participantDetail/participantTemplates';
+import Swal from '../dist/sweetalert2.js'
+import { participantName, participantId, ticketType, registration, merchandise, buttonElement, checkStatusElement, historySession, statusActive, statusInactive } from '../templates/participantDetail/participantTemplates';
 
 
 const participantDetail = {
@@ -10,14 +11,14 @@ const participantDetail = {
       <div class="spinner">
         <div class="progress-7"></div>
       </div>
-      <section class="w-full mx-auto pb-40 bg-bottom ">
+      <section class="w-full mx-auto bg-bottom ">
 
       <!-- Navigation -->
         <div class="flex items-center justify-between">
           <a href="/#/active-session" class="pl-5">
-              <span class="iconify text-4xl" data-icon="bi:arrow-left-short"></span>
+              <span class="iconify text-5xl" data-icon="bi:arrow-left-short"></span>
           </a>
-          <h1 class="mx-auto font-semibold">Participant Detail</h1>
+          <h1 class="mx-auto text-2xl"><b>Participant Detail</b></h1>
           <div></div>
         </div>
       <!-- Navigation -->
@@ -25,11 +26,9 @@ const participantDetail = {
         <div class="box-border w-full bg-white mx-auto rounded-lg mt-10 mb-10 pb-5 md:px-7 px-4">
           <div class="flex items-center justify-between border-b-2 border-dashed">
             <div class="w-full">
-              <p class="text-gray-400 pt-4 font-medium text-xs">
-              PARTICIPANT NAME
-              </p>
-              <div id="custumer">
-
+            <div class="flex items-center justify-between w-full">
+                <div id="custumer">
+                </div>
               </div>
             </div>
 
@@ -44,27 +43,17 @@ const participantDetail = {
             <div class="grid grid-cols-2 ">
                 <!--LEFT-->
                 <div>
-
+                <!--ID-->
                   <div>
-                    <p class="text-gray-400 pt-4 font-medium text-xs">ID PARTICIPANT</p>
                     <div id="participant">
                     </div>
                   </div>
 
                   <div>
-                    <p class="text-gray-400 pt-4 font-medium text-xs">TICKET TYPE</p>
                     <div id="ticket">
                     </div>
                   </div>
 
-
-                  <div id="session"></div>
-
-                </div>
-
-                <!-- RIGHT -->
-                <div>
-                  <!--CHECK-IN-->
                   <div id="registration">
 
                   </div>
@@ -75,16 +64,19 @@ const participantDetail = {
                     <p class="regis-time text-xs mt-1 font-medium"></p>
                   </div>
 
+
+                  <div id="session"></div>
+
+                </div>
+
+                <!-- RIGHT -->
+                <div>
+                  <!--CHECK-IN-->
+
                   <div>
                     <p class="text-gray-400 pt-4 font-medium text-xs">CHECK-IN TIME</p>
 
                     <p class="checkin text-xs mt-1 font-medium"></p>
-                  </div>
-
-                  <div>
-                    <p class="text-gray-400 pt-4 font-medium text-xs">HISTORY</p>
-
-                    <p class="history text-xs mt-1 font-medium"></p>
                   </div>
                 </div>
             </div>
@@ -96,6 +88,10 @@ const participantDetail = {
 
               <div id="merch">
 
+              </div>
+
+              <div id="session-history">
+              <p class="text-gray-400 pt-4 font-medium text-xs">HISTORY</p>
               </div>
 
               <!--BUTTON SUBMIT-->
@@ -113,40 +109,54 @@ const participantDetail = {
     const { id } = UrlParser.parseActiveUrlWithoutCombiner();
     const elementName = document.querySelector('#custumer');
     const elementId = document.querySelector('#participant');
+    const elementDesc = document.querySelector('#ticket');
+    const validatedOn = document.querySelector('#registration');
     const elementTicketType = document.querySelector('#ticket');
     const merchElement = document.querySelector('#merch');
     const buttonSubmit = document.querySelector('#button-submit');
     const spinnerElement = document.querySelector('.spinner');
+    const checkStatus = document.querySelector('#check-status');
     const statusCheckIn = document.querySelector('#status');
     const regisTime = document.querySelector('.regis-time');
     const checkTime = document.querySelector('.checkin');
+    const HistoryElement = document.querySelector('#session-history');
 
     const idParticipant = id.split('-')[0];
     const idSession = id.split('-')[1];
 
-    const historySession = (data) => `
-      <p class="font-bold text-xs py-2">${ data.id_session }</p>
-    `;
-
     Promise.all([
       GetData(`http://lumintu-tiket.tamiaindah.xyz:8055/items/order?fields=customer_id.customer_id,customer_id.customer_name,ticket_id.ticket_id,ticket_id.ticket_type&filter[customer_id]=${idParticipant}`),
-      GetDataRegistration(`http://localhost:5000/v1/participant/${idParticipant}/seminar/${idSession}`),
-      GetDataRegistration(`http://localhost:5000/v1/merch/${idParticipant}`)
-    ]).then(async([res1, res2, res3]) => {
+      GetDataRegistration(`https://register.ulin-app.xyz/v1/participant/${idParticipant}/seminar/${idSession}`),
+      GetDataRegistration(`https://register.ulin-app.xyz/v1/merch/${idParticipant}`),
+      GetDataRegistration(`https://register.ulin-app.xyz/v1/participant/${idParticipant}`)
+    ]).then(async([res1, res2, res3, res4]) => {
       res1.map((data) => {
 
         elementName.innerHTML = participantName(data);
         elementId.innerHTML = participantId(data);
-
+        // elementDesc.innerHTML = description(data);
       })
 
       // Check Status
       const { validate_on, ticket_type, create_at } = res2.participant
+
       if (validate_on !== '' || null) {
         statusCheckIn.innerHTML += statusActive
       } else {
         statusCheckIn.innerHTML += statusInactive
       }
+
+      //SWEETALERT2 NOTIFY
+      const btn = document.getElementById('button-submit');
+        btn.addEventListener('click', function () {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Your work has been saved',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        })
 
       // ticketType
       elementTicketType.innerHTML = ticketType(ticket_type);
@@ -166,10 +176,23 @@ const participantDetail = {
 
       const listMerchApi = res3.merchandise
 
-      listMerchApi.map(data => {
-        document.getElementById(data).checked = true;
-        document.getElementById(data).disabled = true;
+      if (listMerchApi.length !== 0 || null){
+        listMerchApi.map(data => {
+          document.getElementById(data).checked = true;
+          document.getElementById(data).disable = true;
+        })
+      }
+
+      //SESSION HISTORY
+      res4.map(data => {
+        console.log(data);
+        if(data.validate_on !== '' || null){
+          HistoryElement.innerHTML += historySession(data)
+        }else{
+          HistoryElement.innerHTML = "<p>-</p>"
+        }
       })
+     
 
       buttonSubmit.innerHTML = buttonElement;
 
@@ -195,12 +218,11 @@ const participantDetail = {
         }
       })
 
-
-      const checkIn =  await fetch(`http://localhost:5000/v1/participant/${idParticipant}/seminar/${idSession}`, {
+      const checkIn =  await fetch(`https://register.ulin-app.xyz/v1/participant/${idParticipant}/seminar/${idSession}`, {
         method: 'PATCH'
       })
 
-      const updateMerch =  await fetch(`http://localhost:5000/v1/merch/${idParticipant}`, {
+      const updateMerch =  await fetch(`https://register.ulin-app.xyz/v1/merch/${idParticipant}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'

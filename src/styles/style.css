@@ -2,6 +2,20 @@
     margin: auto;
 }
 
+#preview__dashboard_section_csr button{
+  background-color: rgb(255, 255, 136);
+  width: 250px;
+  margin: 4px 2px;
+  border-radius: 6px;
+  box-shadow: grey;
+  font-size: 14px;
+  border: none;
+  color: rgb(128, 128, 128);
+  padding: 12px 24px;
+  text-align: center;
+  display: inline-block;
+  cursor: pointer;
+}
 
 #preview__dashboard_section_swaplink{
     visibility: hidden;
@@ -50,6 +64,7 @@
   width: 45% !important;
   padding: 3px 3px;
 }
+
 .dataTables_wrapper .dataTables_paginate {
  float:none; 
  text-align:center;
@@ -94,5 +109,8 @@ table.sortable thead tr th {
 .dataTables_info {
   float: none;
   margin-left: 2%;
-  font-size: 13px;
+  font-size: 14px;
+  text-align: center;
+  padding-top: 12px;
+  font-weight: bold;
 }
