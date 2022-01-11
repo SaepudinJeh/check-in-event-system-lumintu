@@ -50,26 +50,7 @@ const FrontPage = {
   },
 
   async afterRender() {
-    const sessionActiveElement = document.querySelector('#sessionActive');
-    const checkedIn = document.querySelector('#CheckedIn');
-
-    const sessionActive = (data) => `
-      <div class="mt-7 w-full bg-white py-3 px-4 rounded-lg shadow-lg">
-        <h1 class="font-bold">${data.session_type}</h1>
-        <p>${data.session_desc}</p>
-        <h2 class="font-bold text-lg">${data.session_speaker_name}</h2>
-      </div>
-    `;
-    GetData(' https://api-ticket.arisukarno.xyz/items/registration?aggregate[countDistinct]=id_participant').then(result => {
-        result.map(data => {
-            sessionIdElemenet.innerHTML += sessionTemplate(data);
-        })
-    })
-
-
-    Promise.all([
-      GetData(' https://api-ticket.arisukarno.xyz/items/registration?aggregate[countDistinct]=id_participant'),
-    ])
+    
   },
 };
 
