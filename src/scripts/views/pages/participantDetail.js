@@ -1,7 +1,6 @@
 import UrlParser from '../../routes/urlParser';
 import GetData from '../../utils/getDataApi';
 import GetDataRegistration from '../../utils/getDataRegistration';
-import Swal from '../dist/sweetalert2.js'
 import { participantName, participantId, ticketType, registration, merchandise, buttonElement, checkStatusElement, historySession, statusActive, statusInactive } from '../templates/participantDetail/participantTemplates';
 
 

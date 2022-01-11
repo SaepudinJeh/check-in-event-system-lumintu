@@ -1,6 +1,4 @@
 import UrlParser from '../../routes/urlParser';
-import { sources, swal } from '../dist/sweetalert2.all';
-import Swal from '../dist/sweetalert2.all'
 import getData from '../../utils/getDataApi';
 
 const scanPage = {
