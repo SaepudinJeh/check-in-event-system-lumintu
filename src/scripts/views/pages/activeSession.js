@@ -21,7 +21,7 @@ const activeSession = {
   async afterRender() {
     const sessionIdElemenet = document.querySelector('#session');
 
-    GetData('http://lumintu-tiket.tamiaindah.xyz:8055/items/session?&filter[day(start_time)][_eq]=03').then(result => {
+    GetData('https://api-ticket.arisukarno.xyz/items/session?&filter[day(start_time)][_eq]=03').then(result => {
         result.map(data => {
             sessionIdElemenet.innerHTML += sessionTemplate(data);
         })
