@@ -1,8 +1,8 @@
 import UrlParser from '../../routes/urlParser';
 import { sources, swal } from '../../views/dist/sweetalert2.all';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
-// import {Html5QrcodeScanner} from "html5-qrcode";
-// import {Html5Qrcode} from "html5-qrcode";
+import { participantId } from '../templates/participantDetail/participantTemplates';
+import getData from '../../utils/getDataApi';
 
 const scanPage = {
   async render() {
@@ -42,29 +42,103 @@ const scanPage = {
 
 
     async function onScanSuccess(decodedText, decodedResult) {
+      
+
       fetch(`https://register.ulin-app.xyz/v1/participant/15/seminar/4`, {
         method: 'PATCH'
       }).then(result => {
-        
-        Swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: 'Your work has been saved',
-          showConfirmButton: false,
-          timer: 1500
-        }).then(() => {
-            location.replace(`/#/participant/${decodedText}-${id}`);
+        if(participantId == $(`data`)){
+          Swal.fire({
+            position: 'center',
+            icon:'success',
+            title: 'Check-In Success',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            location.replace(`/#/participant/${decodedText}-${id}`)
             location.reload()
             return
-        })
-
-        // location.replace(`/#/participant/${decodedText}-${id}`);
-        // location.reload()
-        // return
+          })
+        }
       })
 
-      // handle the scanned code as you like, for example:
-      //console.log(`/#/participant/${decodedText}-${id}`);
+      // function onScanSuccess(decodedText) {
+      //   fetch(`https://register.ulin-app.xyz/v1/participant/15/seminar/4`, {
+      //   method: 'PATCH'
+      // }) .then(result => ({
+      //   if(participantId  == '' || null){
+      //     Swal.fire({
+      //       position: 'center',
+      //       icon:'success',
+      //       title: 'Check-In Success',
+      //       showConfirmButton: false,
+      //       timer: 1500
+      //     }).then(() => {
+      //       location.replace(`/#/participant/${decodedText}-${id}`)
+      //       location.reload()
+      //       return
+      //     })
+      //   }
+      // }))
+      // }
+      //});
+
+      // Promise.all([
+      //   GetData(`https://register.ulin-app.xyz/v1/participant/15/seminar/4`)
+      // ]).then(async([res1, res2]) => {
+      //   res1.map((data) => {
+  
+      //     Swal.fire({
+      //           position: 'center',
+      //           icon: 'success',
+      //           title: 'Check-In Success',
+      //           showConfirmButton: false,
+      //           timer: 1500
+      //         }).then(() => {
+      //               location.replace(`/#/participant/${decodedText}-${id}`);
+      //               location.reload()
+      //               return
+      //           })
+      //          })
+      //   })
+      // });
+
+
+      //POP UP SCAN STATUS
+      // if (validateCheckIn !== '' || null) {
+        // statusCheckIn.innerHTML += statusActive
+        // console.log(statusCheckIn)
+        // console.log('wkwkwk')
+      //   Swal.fire({
+      //         position: 'center',
+      //         icon: 'success',
+      //         title: 'Check-In Success',
+      //         showConfirmButton: false,
+      //         timer: 1500
+      //       }).then(() => {
+      //             location.replace(`/#/participant/${decodedText}-${id}`);
+      //             location.reload()
+      //             return
+      //         })
+      // } else {
+      //   statusCheckIn.innerHTML += statusInactive
+      // }
+      // fetch(`https://register.ulin-app.xyz/v1/participant/15/seminar/4`, {
+      //   method: 'PATCH'
+      // }).then(result => {
+      //   Swal.fire({
+      //     position: 'center',
+      //     icon: 'success',
+      //     title: 'Check-In Success',
+      //     showConfirmButton: false,
+      //     timer: 1500
+      //   }).then(() => {
+      //         location.replace(`/#/participant/${decodedText}-${id}`);
+      //         location.reload()
+      //         return
+      //     })
+      //    })
+      // handle the scanned code as you like, for example;
       // location.replace(`/#/participant/${decodedText}-${id}`);
       
       return
@@ -73,13 +147,6 @@ const scanPage = {
     async function onScanFailure(error) {
       // handle scan failure, usually better to ignore and keep scanning.
       // for example:
-      // Swal.fire({
-      //   position: 'center',
-      //   icon: 'success',
-      //   title: 'Check-In Success',
-      //   showConfirmButton: false,
-      //   timer: 1500
-      // });
       console.warn(`Code scan error = ${error}`);
     }
 

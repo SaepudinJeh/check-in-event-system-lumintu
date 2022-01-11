@@ -2,6 +2,17 @@
     margin: auto;
 }
 
+#preview__dashboard_section_csr{
+  background-color: rgb(255, 255, 136);
+  width: 250px;
+  margin: auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: grey;
+  font-weight: bold;
+  font-size: 14px;
+}
 
 #preview__dashboard_section_swaplink{
     visibility: hidden;
@@ -109,4 +120,7 @@ table.sortable thead tr th {
   text-align: center;
   padding-top: 12px;
   font-weight: bold;
+}
+#preview__dashboard_section_csr button{
+  background-color: ;
 }
