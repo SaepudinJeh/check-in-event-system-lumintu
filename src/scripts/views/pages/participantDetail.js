@@ -25,10 +25,11 @@ const participantDetail = {
         <div class="box-border w-full bg-white mx-auto rounded-lg mt-10 mb-10 pb-5 md:px-7 px-4">
           <div class="flex items-center justify-between border-b-2 border-dashed">
             <div class="w-full">
-              <div class="flex items-center justify-between w-full">
-                <div id="custumer">
+              <p class="text-gray-400 pt-4 font-medium text-xs">
+              PARTICIPANT NAME
+              </p>
+              <div id="custumer">
 
-                </div>
               </div>
             </div>
 
@@ -43,11 +44,19 @@ const participantDetail = {
             <div class="grid grid-cols-2 ">
                 <!--LEFT-->
                 <div>
-                  <!--ID-->
-                  <div id="participant">
+
+                  <div>
+                    <p class="text-gray-400 pt-4 font-medium text-xs">ID PARTICIPANT</p>
+                    <div id="participant">
+                    </div>
                   </div>
 
-                  <div id="ticket"></div>
+                  <div>
+                    <p class="text-gray-400 pt-4 font-medium text-xs">TICKET TYPE</p>
+                    <div id="ticket">
+                    </div>
+                  </div>
+
 
                   <div id="session"></div>
 
@@ -69,13 +78,13 @@ const participantDetail = {
                   <div>
                     <p class="text-gray-400 pt-4 font-medium text-xs">CHECK-IN TIME</p>
 
-                    <p class="regis-time text-xs mt-1 font-medium"></p>
+                    <p class="checkin text-xs mt-1 font-medium"></p>
                   </div>
 
                   <div>
                     <p class="text-gray-400 pt-4 font-medium text-xs">HISTORY</p>
 
-                    <p class="regis-time text-xs mt-1 font-medium"></p>
+                    <p class="history text-xs mt-1 font-medium"></p>
                   </div>
                 </div>
             </div>
@@ -105,13 +114,12 @@ const participantDetail = {
     const elementName = document.querySelector('#custumer');
     const elementId = document.querySelector('#participant');
     const elementTicketType = document.querySelector('#ticket');
-    const validatedOn = document.querySelector('#registration');
     const merchElement = document.querySelector('#merch');
     const buttonSubmit = document.querySelector('#button-submit');
-    const checkStatus = document.querySelector('#check-status');
     const spinnerElement = document.querySelector('.spinner');
     const statusCheckIn = document.querySelector('#status');
     const regisTime = document.querySelector('.regis-time');
+    const checkTime = document.querySelector('.checkin');
 
     const idParticipant = id.split('-')[0];
     const idSession = id.split('-')[1];
@@ -132,7 +140,7 @@ const participantDetail = {
 
       })
 
-      // Check Status --------->
+      // Check Status
       const { validate_on, ticket_type, create_at } = res2.participant
       if (validate_on !== '' || null) {
         statusCheckIn.innerHTML += statusActive
@@ -146,6 +154,7 @@ const participantDetail = {
       // Registration time
 
       regisTime.innerHTML = `${moment(create_at).locale('id').format('LL')}`
+      checkTime.innerHTML = `${moment(validate_on).locale('id').format('LLLL')}`
 
       // Merch ------->
 
@@ -199,9 +208,13 @@ const participantDetail = {
         body: JSON.stringify(merchandise)
       })
 
-      console.table([checkIn, updateMerch])
+      if (checkIn.status === 200 && updateMerch.status === 200) {
 
-      // window.location.replace('/#/active-session')
+        window.location.replace('/#/active-session')
+      } else {
+        console.log('Wkwkwkwwk')
+      }
+
 
     })
   }

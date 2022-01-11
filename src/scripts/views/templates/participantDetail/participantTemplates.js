@@ -1,5 +1,4 @@
 const participantName = (data) => `
-  <p class="text-gray-400 pt-4 font-medium text-xs">PARTICIPANT NAME</p>
   <p class="font-bold text-lg truncate">${data.customer_id.customer_name}</p>
 `;
 
@@ -16,18 +15,11 @@ const statusInactive = `
 `;
 
 const participantId = (data) => `
-  <p class="text-gray-400 pt-4 font-medium text-xs">ID PARTICIPANT</p>
   <p class="font-bold text-md py-2">${data.customer_id.customer_id}</p>
 `;
 
 const ticketType =(data) =>`
-   <p class="text-gray-400 pt-4 font-medium text-xs">TICKET TYPE</p>
    <p class="font-bold text-xs py-2">${data}</p>
-`;
-
-const registration = (data) => `
-  <p class="text-gray-400 pt-4 font-medium text-xs">CHECK-IN TIME</p>
-  <p class="font-bold text-xs py-2">${ moment(data.min.validated_on).format('LLLL') }</p>
 `;
 
 const merchandise = (data) => `
@@ -45,20 +37,13 @@ const buttonElement = `
   </button>
 `;
 
-const checkStatusElement = (data) => `
-  <div class="py-1 px-2 text-center text-white text-xs">
-    ${data}
-  </div>
-`;
 
 export {
   participantName,
   participantId,
   ticketType,
-  registration,
   merchandise,
   buttonElement,
-  checkStatusElement,
   statusActive,
   statusInactive
 };
