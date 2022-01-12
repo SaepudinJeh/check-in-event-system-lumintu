@@ -14,7 +14,7 @@ const participantDetailFromList = {
 
       <!-- Navigation -->
         <div class="flex items-center justify-between">
-          <a href="/#/active-session" class="pl-5">
+          <a href="/#/participants" class="pl-5">
               <span class="iconify text-5xl" data-icon="bi:arrow-left-short"></span>
           </a>
           <h1 class="mx-auto text-2xl"><b>Participant Detail</b></h1>

@@ -47,7 +47,7 @@ const participantPage = {
         "pagingType":"simple_numbers",
         language: {
           sLengthMenu:"_MENU_",
-          search: '', searchPlaceholder: "Participant ID/Link" ,
+          search: '', searchPlaceholder: "Participant name/id" ,
           oPaginate: {
               sNext: ' <button class="px-4 py-2 my-2 text-white bg-yellow-400 rounded-full hover:bg-gray-700 hover:text-black" > > <button class="sr-only ">(current)</button>',
               sPrevious: ' <button class="px-4 py-2 my-2 text-white bg-yellow-400 rounded-full hover:bg-gray-700 hover:text-black" > < <button class="sr-only ">(current)</button>',
