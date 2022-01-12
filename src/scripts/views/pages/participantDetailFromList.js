@@ -4,7 +4,7 @@ import GetDataRegistration from '../../utils/getDataRegistration';
 import { participantName, participantId, ticketType, registration, merchandise, buttonElement, checkStatusElement, historySession, statusActive, statusInactive } from '../templates/participantDetail/participantTemplates';
 
 
-const participantDetail = {
+const participantDetailFromList = {
   async render() {
     return `
       <div class="spinner">
@@ -57,26 +57,9 @@ const participantDetail = {
 
                   </div>
 
-                  <div>
-                    <p class="text-gray-400 pt-4 font-medium text-xs">REGISTRATION TIME</p>
-
-                    <p class="regis-time text-xs mt-1 font-medium"></p>
-                  </div>
-
 
                   <div id="session"></div>
 
-                </div>
-
-                <!-- RIGHT -->
-                <div>
-                  <!--CHECK-IN-->
-
-                  <div>
-                    <p class="text-gray-400 pt-4 font-medium text-xs">CHECK-IN TIME</p>
-
-                    <p class="checkin text-xs mt-1 font-medium"></p>
-                  </div>
                 </div>
             </div>
           <!--GRID CLOSE-->
@@ -125,123 +108,106 @@ const participantDetail = {
 
     Promise.all([
       GetData(`http://lumintu-tiket.tamiaindah.xyz:8055/items/order?fields=customer_id.customer_id,customer_id.customer_name,ticket_id.ticket_id,ticket_id.ticket_type&filter[customer_id]=${idParticipant}`),
-      GetDataRegistration(`https://register.ulin-app.xyz/v1/participant/${idParticipant}/seminar/${idSession}`),
       GetDataRegistration(`https://register.ulin-app.xyz/v1/merch/${idParticipant}`),
       GetDataRegistration(`https://register.ulin-app.xyz/v1/participant/${idParticipant}`)
-    ]).then(async([res1, res2, res3, res4]) => {
+    ]).then(async([res1, res2, res3]) => {
       res1.map((data) => {
 
         elementName.innerHTML = participantName(data);
         elementId.innerHTML = participantId(data);
-        // elementDesc.innerHTML = description(data);
       })
 
-      // Check Status
-      const { validate_on, ticket_type, create_at } = res2.participant
-
-      if (validate_on !== '' || null) {
-        statusCheckIn.innerHTML += statusActive
-      } else {
-        statusCheckIn.innerHTML += statusInactive
-      }
-
-      // ticketType
-      elementTicketType.innerHTML = ticketType(ticket_type);
-
-      // Registration time
-
-      regisTime.innerHTML = `${moment(create_at).locale('id').format('LL')}`
-      checkTime.innerHTML = `${moment(validate_on).locale('id').format('LLLL')}`
-
-      // Merch ------->
-
-      const merch = res2.merch
-      merch.map(data => {
-        // Merch list logic
-        merchElement.innerHTML += merchandise(data)
-      })
-
-      const listMerchApi = res3.merchandise
-
-      if (listMerchApi.length !== 0 || null){
-        listMerchApi.map(data => {
-          document.getElementById(data).checked = true;
-          document.getElementById(data).disable = true;
-        })
-      }
+      const id_seminar = new Array() 
 
       //SESSION HISTORY
-      res4.map(data => {
-        console.log(data);
+      res3.map(data => {
+        id_seminar.push(data.id_seminar)
+
+
         if(data.validate_on !== '' || null){
           HistoryElement.innerHTML += historySession(data)
         }else{
           HistoryElement.innerHTML = "<p>-</p>"
         }
       })
+
+      GetDataRegistration(`https://register.ulin-app.xyz/v1/participant/${idParticipant}/seminar/${id_seminar[0]}`).then((data) => {
+        const merch = data.merch
+          merch.map(data => {
+            merchElement.innerHTML += merchandise(data)
+          })
+
+
+        const listMerchApi = res2.merchandise
+
+        if (listMerchApi.length !== 0 || null){
+            listMerchApi.map(data => {
+            document.getElementById(data).checked = true;
+            document.getElementById(data).disable = true;
+            })
+        }
+    
+      })
      
 
       buttonSubmit.innerHTML = buttonElement;
 
       spinnerElement.classList.add('hidden')
+
+
+
+      buttonSubmit.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+  
+        // Form list merch checkbox
+        const itemForm = document.getElementById('merch');
+        const checkBoxes = itemForm.querySelectorAll('input[type="checkbox"]');
+  
+        const merchandise = new Array()
+  
+        checkBoxes.forEach(data => {
+          if (data.checked) {
+            merchandise.push(data.value)
+          }
+        })
+  
+        const updateMerch =  await fetch(`https://register.ulin-app.xyz/v1/merch/${idParticipant}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(merchandise)
+        })
+  
+        if (updateMerch.status === 200) {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Your work has been saved',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            window.location.reload()
+          })
+        } else {
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Your work cant be saved',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            window.location.reload()
+          })
+        }
+  
+  
+      })
     }).catch((err) => {
       console.log(err)
     });
-
-    // Submit Check in & update merchandise
-    buttonSubmit.addEventListener('click', async (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      // Form list merch checkbox
-      const itemForm = document.getElementById('merch');
-      const checkBoxes = itemForm.querySelectorAll('input[type="checkbox"]');
-
-      const merchandise = new Array()
-
-      checkBoxes.forEach(data => {
-        if (data.checked) {
-          merchandise.push(data.value)
-        }
-      })
-
-      const checkIn =  await fetch(`https://register.ulin-app.xyz/v1/participant/${idParticipant}/seminar/${idSession}`, {
-        method: 'PATCH'
-      })
-
-      const updateMerch =  await fetch(`https://register.ulin-app.xyz/v1/merch/${idParticipant}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(merchandise)
-      })
-
-      if (checkIn.status === 200 && updateMerch.status === 200) {
-        Swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: 'Your work has been saved',
-          showConfirmButton: false,
-          timer: 1500
-        }).then(() => {
-          window.location.replace('/#/active-session')
-        })
-      } else {
-        Swal.fire({
-          position: 'center',
-          icon: 'error',
-          title: 'Your work cant be saved',
-          showConfirmButton: false,
-          timer: 1500
-        }).then(() => {
-          window.location.reload()
-        })
-      }
-
-
-    })
   }
 };
 
-export default participantDetail;
+export default participantDetailFromList;

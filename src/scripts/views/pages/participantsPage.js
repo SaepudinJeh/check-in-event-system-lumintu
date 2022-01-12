@@ -57,7 +57,7 @@ const participantPage = {
       "targets": -1,
       "data": null,
       "render": function(data, type, row, meta) {
-          return `<a href="/#/participant/${data.customer_id.customer_id}"><button class='bg-yellow-400 hover:bg-gray-700 text-white font-bold px-3 py-1 md:py-2 md:px-4 rounded-full my-2'>Detail</button></a>`
+          return `<a href="/#/participant-from-list/${data.customer_id.customer_id}"><button class='bg-yellow-400 hover:bg-gray-700 text-white font-bold px-3 py-1 md:py-2 md:px-4 rounded-full my-2'>Detail</button></a>`
       }
       }]
     });

@@ -40,23 +40,33 @@ const scanPage = {
     const idSeminar = id
 
 
-    async function onScanSuccess(idParticipant,decodedText, decodedResult) {
+    async function onScanSuccess(idParticipant, decodedResult) {
       // handle the scanned code as you like, for example:
       // window.location.replace(`/#/participant/${idParticipant}-${idSeminar}`);
-      fetch(`https://register.ulin-app.xyz/v1/participant/15/seminar/4`, {
+      fetch(`https://register.ulin-app.xyz/v1/participant/${idParticipant}/seminar/${id}`, {
         method: 'PATCH'
       }).then(result => {
-        Swal.fire({
-          position: 'center',
-          icon:'success',
-          title: 'Check-In Success',
-          showConfirmButton: false,
-          timer: 1500
-        }).then(() => {
-          location.replace(`/#/participant/${decodedText}-${id}`)
-          location.reload()
-          return
-        })
+        if(result.status !== 200) {
+          Swal.fire({
+            position: 'center',
+            icon:'error',
+            title: 'Check In failed',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            location.reload()
+          })
+        } else {
+          Swal.fire({
+            position: 'center',
+            icon:'success',
+            title: 'Check-In Success',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            location.replace(`/#/participant/${idParticipant}-${id}`)
+          })
+        }
       })
     }
 
